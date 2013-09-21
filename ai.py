@@ -2,6 +2,7 @@ import numpy
 from vector import Vector
 from car import Car
 from curve import CurveData
+import time
 
 
 import random
@@ -10,7 +11,7 @@ class AI(object):
 
     def __init__(self,memSize=10,maxSpeed=10):
     	self.memorySize=10+random.randint(-2,2)
-    	self.maxSpeed = 10.0+random.gauss(0,2)
+    	self.maxSpeed = 170.0+random.gauss(0,20)
         self.lastAcc=[];
         self.lastVel=[];
         self.lastStatus=[];
@@ -44,7 +45,10 @@ class AI(object):
         # Always accelerate for now.
         self.lastAcc.pop(0)
         self.lastAcc.append(acc)
-        return acc
+        print meanSpeed
+        print acc
+        time.sleep(0.01)
+        return acc*6
 
     def mutate(self):
     	newMemsize=self.memorySize+random.randint(-2,2)
