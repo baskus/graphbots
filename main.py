@@ -12,7 +12,7 @@ curve_data = CurveData("VOLV-B.ST")
 
 # Create 100 (AI, Car) pairs.
 car_start = Vector(10, curve_data.value_at_x(10))
-entities = [(AI(), Car(car_start)) for i in range(100)]
+entities = [(AI(), Car(car_start)) for i in range(1)]
 
 screen = Screen(1024, 768)
 
