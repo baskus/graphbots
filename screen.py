@@ -12,7 +12,7 @@ class Screen(object):
         self.__window_min_y = None
         self.__window_max_y = None
 
-    def set_window(self, min_x, max_x, max_y, curve_data):
+    def set_window(self, min_x, max_x, min_y, max_y, curve_data):
 
         zoom=100
         if max_x - min_x < zoom:
@@ -23,7 +23,7 @@ class Screen(object):
         min_x_y = curve_data.value_at_x(min_x)
         max_x_y = curve_data.value_at_x(max_x)
 
-        min_y = min(min_x_y, max_x_y)
+        min_y = min(min_x_y, max_x_y, min_y)
         max_y = max(min_x_y, max_x_y, max_y)
 
         max_rx_ry=max(max_x-min_x,max_y-min_y)
@@ -64,20 +64,6 @@ class Screen(object):
 
             points.append((int(x* self.__width), int(y * self.__height)))
 
-        # for x, y in zip(range(len(curve)), curve):
-        #     range_x = self.__window_max_x - self.__window_min_x
-        #     range_y = self.__window_max_y - self.__window_min_y
-        #     print "ranges:", range_x, range_y
-        #     print "(x,y):", (x,y)
-        #     print "self.__window_min_x:", self.__window_min_x
-        #     print "self.__window_max_x:", self.__window_max_x
-        #     X = (x - self.__window_min_x) / range_x * self.__width
-        #     Y = (y - self.__window_min_y) / range_y * self.__height
-
-        #     points.append((X, Y))
-
-        #print points
-
         # lines(Surface, color, closed, pointlist, width=1)
         pygame.draw.lines(self.__surface, (255, 0, 0), False, points)
 
@@ -89,5 +75,7 @@ class Screen(object):
         y = (1.0 - (car.position.y - self.__window_min_y) / range_y) \
             * self.__height
 
+        color = (0, 0, 255) if car.alive else (255, 0, 0)
+
         # circle(Surface, color, pos, radius, width=0) -> Rect
-        pygame.draw.circle(self.__surface, (0,0,255), (int(x), int(y)), 5)
+        pygame.draw.circle(self.__surface, color, (int(x), int(y)), 5)

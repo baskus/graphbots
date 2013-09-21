@@ -20,11 +20,11 @@ class Vector(object):
     def __mul__(self, scalar):
         return Vector(self.x * scalar, self.y * scalar)
 
-    def __neg__(self, other):
+    def __neg__(self):
         return Vector(-self.x, -self.y)
 
     def length(self):
-        return math.sqrt(self.x**2.0 + self.y**2.0)
+        return math.sqrt(self.x*self.x + self.y*self.y)
 
     def normalized(self):
         L = self.length()

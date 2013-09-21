@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 from ai         import AI
@@ -26,8 +28,9 @@ def update(dt):
             if event.key == pygame.K_ESCAPE:
                 stop()
 
-    car_min_x = len(curve_data)-1
-    car_max_x = 0
+    car_min_x = entities[0][1].position.x if len(entities) > 0 else 0
+    car_max_x = entities[0][1].position.x if len(entities) > 0 else 0
+    car_min_y = entities[0][1].position.y if len(entities) > 0 else 0
     car_max_y = entities[0][1].position.y if len(entities) > 0 else 0
 
     # Update and collect min and max x for determining the draw window.
@@ -48,10 +51,11 @@ def update(dt):
 
         car_min_x = min(car_min_x, c.position.x)
         car_max_x = max(car_max_x, c.position.x)
+        car_min_y = min(car_min_y, c.position.y)
         car_max_y = max(car_max_y, c.position.y)
 
     # Set the window and draw the background.
-    screen.set_window(car_min_x, car_max_x, car_max_y, curve_data)
+    screen.set_window(car_min_x, car_max_x, car_min_y, car_max_y, curve_data)
     screen.draw_background(curve_data)
 
     # Draw all cars.
@@ -63,6 +67,7 @@ def update(dt):
 def main_loop():
     while run:
         update(0.01)
+        time.sleep(0.001)
 
     print "Main loop finished."
 
