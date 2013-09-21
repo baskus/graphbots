@@ -3,4 +3,8 @@ class AI(object):
         pass
 
     def update(self, dt, position, velocity, curve, curve_p):
-        pass
+        """Calculate the amount of gas"""
+        height = position.y - curve.value_at_x(position.x)
+
+        # Always accelerate for now.
+        return 1.0

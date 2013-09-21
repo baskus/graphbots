@@ -7,7 +7,10 @@ class Car(object):
         self.position = position
         self.velocity = Vector(0, 0)
 
-    def update(self, dt, gas, tangent):
-        acceleration = gas * tangent + GRAVITY
-        self.velocity = self.velocity + acceleration * dt
+    def update(self, dt, height, acceleration, tangent):
+        if height > 0:
+            acc = acceleration * tangent + GRAVITY.dot(tangent) * tangent
+        else:
+            acc = GRAVITY
+        self.velocity = self.velocity + acc * dt
         self.position = self.position + self.velocity * dt

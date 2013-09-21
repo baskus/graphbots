@@ -1,9 +1,6 @@
-import pygame
-
 from ai         import AI
 from car        import Car
 from curve      import CurveData
-from drawable   import Drawable
 from screen     import Screen
 from vector     import Vector
 
@@ -12,9 +9,12 @@ from vector     import Vector
 curve_data = CurveData("VOLV-B.ST")
 
 # Create 100 (AI, Car) pairs.
-entities = [(AI(), Car()) for i in range(100)]
+car_start = Vector(10, curve_data.value_at_x(10))
+entities = [(AI(), Car(car_start)) for i in range(100)]
 
 screen = Screen(512, 512)
+
+run = True
 
 def update(dt):
     car_min_x = curve_data.min_x
@@ -26,44 +26,40 @@ def update(dt):
         curve = curve_data.range(0, c.position.x)  # x == t ?
         curve_p = curve_data.range_p(0, c.position.x)
         # Update AI.
-        gas = a.update(dt, c.position, c.velocity, curve, curve_p)
+        acceleration = a.update(dt, c.position, c.velocity, curve, curve_p)
         # Update car.
+        graph_level = curve.value_at_x(c.position.y)
+        c.position = Vector(c.position.x, max(graph_level, c.position.y))
+        height = c.position.y - graph_level
         diff = curve[-1] - curve[-2]
         tangent = Vector(diff[0], diff[1]).normalized()
-        c.update(dt, gas, tangent)
+        c.update(dt, height, acceleration, tangent)
 
         car_min_x = min(car_min_x, c.position.x)
         car_max_x = max(car_max_x, c.position.x)
 
-    # Set the window.
+    # Set the window and draw the background.
     screen.set_window(car_min_x, car_max_x)
+    screen.draw_background(curve_data)
 
     # Draw all cars.
     for _, c in entities:
+        screen.draw_car(c)
 
+def main_loop():
+    while run:
+        update(0.5)
 
+    print "Main loop finished."
 
-
-class Simulation(object):
-    def __init__(self):
-        self.__run = False
-
-    def main_loop(self):
-        self.__run = True
-        while self.__run:
-            pass
-
-    def stop(self):
-        print "Stopping simulation..."
-        self.__run = False
+def stop():
+    run = False
 
 def main():
-    s = Simulation()
-
     try:
-        s.main_loop()
+        main_loop()
     except KeyboardInterrupt:
-        s.stop()
+        stop()
 
 if __name__ == "__main__":
     main()

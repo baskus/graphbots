@@ -26,3 +26,6 @@ class Vector(object):
     def normalized(self):
         L = self.length()
         return Vector(self.x / L, self.y / L)
+
+    def dot(self, other):
+        return self.x * other.x + self.y * other.y
