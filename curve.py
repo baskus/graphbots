@@ -78,9 +78,3 @@ class CurveData(object):
 def movingaverage(data, window_size):
     window= numpy.ones(int(window_size))/float(window_size)
     return numpy.convolve(data, window, 'same')
-
-    
-cd = CurveData("VOLV-B.ST")
-
-plot(cd.curve)
-show()
