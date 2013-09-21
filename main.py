@@ -2,12 +2,14 @@ import pygame
 
 from ai         import AI
 from car        import Car
+from curve      import CurveData
 from drawable   import Drawable
 from screen     import Screen
 from vector     import Vector
 
 #curve_data = fetch_curve_data("VOLV-B.ST")
-curve_data = (numpy.random.random((100,2)), numpy.random.random((100,2)))
+#curve_data = (numpy.random.random((100,2)), numpy.random.random((100,2)))
+curve_data = CurveData("VOLV-B.ST")
 
 # Create 100 (AI, Car) pairs.
 entities = [(AI(), Car()) for i in range(100)]
@@ -21,7 +23,8 @@ def update(dt):
     # Update and collect min and max x for determining the draw window.
     for a, c in entities:
         # Fetch curve data.
-        curve, curve_p = curve_data.curves_from_x(c.position.x)   # x == t ?
+        curve = curve_data.range(0, c.position.x)  # x == t ?
+        curve_p = curve_data.range_p(0, c.position.x)
         # Update AI.
         gas = a.update(dt, c.position, c.velocity, curve, curve_p)
         # Update car.
