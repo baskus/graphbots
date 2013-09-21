@@ -1,6 +1,6 @@
 from vector import Vector
 
-GRAVITY = Vector(0, -1)
+GRAVITY = Vector(0, -10)
 
 class Car(object):
     def __init__(self, position):
@@ -9,7 +9,7 @@ class Car(object):
 
     def update(self, dt, height, acceleration, tangent):
         if height > 0:
-            acc = acceleration * tangent + GRAVITY.dot(tangent) * tangent
+            acc = tangent * acceleration + tangent * GRAVITY.dot(tangent)
         else:
             acc = GRAVITY
         self.velocity = self.velocity + acc * dt

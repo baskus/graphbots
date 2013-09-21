@@ -12,33 +12,82 @@ class Screen(object):
         self.__window_min_y = None
         self.__window_max_y = None
 
-    def set_window(self, min_x, max_x, curve_data):
-        min_y = curve_data.value_at_x(min_x)
-        max_y = curve_data.value_at_x(max_x)
+    def set_window(self, min_x, max_x, max_y, curve_data):
+
+        zoom=100
+        if max_x - min_x < zoom:
+            temp = (max_x + min_x)/2.0
+            max_x = temp + zoom/2.0
+            min_x = temp - zoom/2.0
+
+        min_x_y = curve_data.value_at_x(min_x)
+        max_x_y = curve_data.value_at_x(max_x)
+
+        min_y = min(min_x_y, max_x_y)
+        max_y = max(min_x_y, max_x_y, max_y)
+
+        max_rx_ry=max(max_x-min_x,max_y-min_y)
+
+        if max_x-min_x<max_y-min_y:
+            temp = (max_x+min_x)/2.0
+            max_x=temp+max_rx_ry/2.0
+            min_x=temp-max_rx_ry/2.0
+        else:
+            temp = (max_y+min_y)/2.0
+            max_y=temp+max_rx_ry/2.0
+            min_y=temp-max_rx_ry/2.0
 
         self.__window_min_x = min_x
         self.__window_max_x = max_x
         self.__window_min_y = min_y
         self.__window_max_y = max_y
 
+        print max_x - min_x
+
     def draw_background(self, curve_data):
-        curve = curve_data.data_from_to(
-            self.__window_min_x, self.__window_max_x)
+        self.__surface.fill((255,255,255))
+
+        min_i = max(0, int(self.__window_min_x) - 1)
+        max_i = int(self.__window_max_x) + 2
+        curve = curve_data.range(min_i, max_i)
+
 
         points = []
-        for p in curve:
-            range_x = self.__window_max_x - self.__window_min_x
-            range_y = self.__window_max_y - self.__window_min_y
-            x = (p[0] - self.__window_min_x ) / range_x * self.__width
-            y = (p[1] - self.__window_min_y ) / range_y * self.__height
+        range_x = float(self.__window_max_x - self.__window_min_x)
+        range_y = float(self.__window_max_y - self.__window_min_y)
+        for i in range(len(curve)):
 
-            points.append((x, y))
+            x = (float(min_i + i) - self.__window_min_x) / range_x
 
-        #lines(Surface, color, closed, pointlist, width=1)
+            #x = float(min_i + i) / len(curve)
+            y = 1.0 - (curve[i] - self.__window_min_y) / range_y
+
+            points.append((int(x* self.__width), int(y * self.__height)))
+
+        # for x, y in zip(range(len(curve)), curve):
+        #     range_x = self.__window_max_x - self.__window_min_x
+        #     range_y = self.__window_max_y - self.__window_min_y
+        #     print "ranges:", range_x, range_y
+        #     print "(x,y):", (x,y)
+        #     print "self.__window_min_x:", self.__window_min_x
+        #     print "self.__window_max_x:", self.__window_max_x
+        #     X = (x - self.__window_min_x) / range_x * self.__width
+        #     Y = (y - self.__window_min_y) / range_y * self.__height
+
+        #     points.append((X, Y))
+
+        #print points
+
+        # lines(Surface, color, closed, pointlist, width=1)
         pygame.draw.lines(self.__surface, (255, 0, 0), False, points)
 
     def draw_car(self, car):
-        pass
+        range_x = float(self.__window_max_x - self.__window_min_x)
+        range_y = float(self.__window_max_y - self.__window_min_y)
 
+        x = (car.position.x - self.__window_min_x) / range_x * self.__width
+        y = (1.0 - (car.position.y - self.__window_min_y) / range_y) \
+            * self.__height
 
-
+        # circle(Surface, color, pos, radius, width=0) -> Rect
+        pygame.draw.circle(self.__surface, (0,0,255), (int(x), int(y)), 5)

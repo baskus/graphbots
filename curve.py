@@ -6,8 +6,6 @@ import numpy
 
 import datetime
 
-from pylab import plot,show
-
 class Date(object):
     def __init__(self,year,month,day):
         self.Month=month;
@@ -37,16 +35,22 @@ class CurveData(object):
         self.curve_p = numpy.gradient(self.curve)
 
     def __len__(self):
-        return len(curve_p)
+        return len(self.curve_p)
 
     def range(self, from_x, to_x):
+        #from_x =max (0,from_x)
+        #to_x= min (to_x,len(self.curve))
         return self.curve[from_x:to_x]
 
     def range_p(self, from_x, to_x):
-       return self.curve_p[from_x:to_x]
+        #from_x =max (0,from_x)
+        #to_x= min (to_x,len(self.curve_p))
+        return self.curve_p[from_x:to_x]
 
 
     def value_at_x(self, x):
+        x=max(x,0)
+        x=min(x,len(self.curve)-1)
         int_x  = int(x)
         int_x1 = int_x+1
         val    = x-int_x
@@ -54,6 +58,8 @@ class CurveData(object):
         return self.curve[int_x]*(1-val)+self.curve[int_x1]*(val)
 
     def value_p_at_x(self,x):
+        x=max(x,0)
+        x=min(x,len(self.curve_p)-1)
         int_x  = int(x)
         int_x1 = int_x+1
         val    = x-int_x
