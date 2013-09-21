@@ -37,5 +37,8 @@ class Screen(object):
         #lines(Surface, color, closed, pointlist, width=1)
         pygame.draw.lines(self.__surface, (255, 0, 0), False, points)
 
+    def draw_car(self, car):
+        pass
+
 
 
