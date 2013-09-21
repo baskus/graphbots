@@ -20,7 +20,6 @@ class AI(object):
         	self.lastStatus.append(1)
 
         
-
     def update(self, dt, car, curve,curve_p):
     	self.lastVel.pop(0)
         self.lastVel.append(car.velocity)
@@ -55,12 +54,4 @@ class AI(object):
     	if (newMaxspeed<1):
     		newMaxspeed=1
     	return AI(newMemsize,newMaxspeed)
-
-
-ai= AI()
-
-
-
-ai.update(1,Car(Vector(1,1)),1,1)
-
 

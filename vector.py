@@ -17,6 +17,9 @@ class Vector(object):
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
 
+    def __mul__(self, scalar):
+        return Vector(self.x * scalar, self.y * scalar)
+
     def __neg__(self, other):
         return Vector(-self.x, -self.y)
 
