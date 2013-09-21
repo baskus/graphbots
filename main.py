@@ -26,7 +26,7 @@ def update(dt):
         curve = curve_data.range(0, c.position.x)  # x == t ?
         curve_p = curve_data.range_p(0, c.position.x)
         # Update AI.
-        acceleration = a.update(dt, c.position, c.velocity, curve, curve_p)
+        acceleration = a.update(dt, c, curve, curve_p)
         # Update car.
         graph_level = curve.value_at_x(c.position.y)
         c.position = Vector(c.position.x, max(graph_level, c.position.y))

@@ -30,9 +30,17 @@ class CurveData(object):
         self.curve   = self.curve[::-1]
         self.date    = self.date[::-1]
 
+
+
         ws =20;
 
         self.curve   = movingaverage(self.curve,ws)[ws:-ws]
+
+        min_c = min(self.curve)
+        max_c = max(self.curve)
+
+        self.curve = (self.curve - min_c)/(max_c-min_c)*1000.0
+
         self.date    = self.date[ws:-ws]
         self.curve_p = numpy.gradient(self.curve)
 
@@ -65,3 +73,8 @@ def movingaverage(data, window_size):
     window= numpy.ones(int(window_size))/float(window_size)
     return numpy.convolve(data, window, 'same')
 
+    
+cd = CurveData("VOLV-B.ST")
+
+plot(cd.curve)
+show()
